@@ -5,6 +5,19 @@ import { Button } from '@/components/ui/button';
 
 const projects = [
   {
+    title: 'TeamSphere – Enterprise Workforce Management Platform',
+    description: 'Full-stack enterprise system serving 245+ employees with role-based dashboards for HR and agents, featuring real-time notifications and dynamic analytics.',
+    techStack: ['Spring Boot', 'Next.js', 'PostgreSQL', 'WebSocket', 'TypeScript', 'Recharts'],
+    highlights: [
+      'Architected system with role-based dashboards for 245+ employees',
+      'Developed 50+ secure REST APIs with JWT-based RBAC',
+      'Built real-time notifications using WebSocket (STOMP)',
+      'Implemented dynamic analytics dashboards, cutting manual reporting by 70%',
+    ],
+    github: 'https://github.com/shikhar2/teamsphere',
+    demo: 'http://34.0.15.9:2002/login',
+  },
+  {
     title: 'TeamSphere HR System',
     description: 'Enterprise HR management platform with role-based access control, attendance tracking, and secure employee workflow management.',
     techStack: ['Next.js', 'Angular', 'Spring Boot', 'MySQL'],
@@ -13,8 +26,8 @@ const projects = [
       'Real-time attendance tracking',
       'Scalable microservices architecture',
     ],
-    github: 'https://github.com/shikharpathak/teamsphere-hr',
-    demo: '', // Add demo URL if available
+    github: 'https://github.com/shikhar2/teamsphere-hr',
+    demo: '',
   },
   {
     title: 'Central Web Application',
@@ -25,8 +38,8 @@ const projects = [
       'Redis caching for high-performance retrieval',
       'Resolved 100+ critical bugs',
     ],
-    github: 'https://github.com/shikharpathak/central-web-app',
-    demo: '', // Add demo URL if available
+    github: 'https://github.com/shikhar2/central-web-app',
+    demo: '',
   },
 ];
 

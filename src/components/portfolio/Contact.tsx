@@ -10,8 +10,8 @@ import emailjs from '@emailjs/browser';
 const contactLinks = [
   { icon: Mail, label: 'Email', value: 'work.shikharpathak@gmail.com', href: 'mailto:work.shikharpathak@gmail.com' },
   { icon: Phone, label: 'Phone', value: '+91-7302180143', href: 'tel:+917302180143' },
-  { icon: Linkedin, label: 'LinkedIn', value: 'linkedin.com/in/shikhar-pathak', href: 'https://www.linkedin.com/in/shikhar-pathak' },
-  { icon: Github, label: 'GitHub', value: 'github.com/shikharpathak', href: 'https://github.com/shikharpathak' },
+  { icon: Linkedin, label: 'LinkedIn', value: 'linkedin.com/in/shikhar3', href: 'https://www.linkedin.com/in/shikhar3' },
+  { icon: Github, label: 'GitHub', value: 'github.com/shikhar2', href: 'https://github.com/shikhar2' },
 ];
 
 export function Contact() {
