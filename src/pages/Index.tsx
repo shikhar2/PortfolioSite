@@ -9,6 +9,7 @@ import { Achievements } from '@/components/portfolio/Achievements';
 import { Contact } from '@/components/portfolio/Contact';
 import { Footer } from '@/components/portfolio/Footer';
 import { CursorGlow } from '@/components/ui/cursor-glow';
+import { ScrollProgress } from '@/components/ui/scroll-progress';
 
 const Index = () => {
   return (

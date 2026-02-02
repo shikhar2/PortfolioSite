@@ -2,8 +2,19 @@ import { motion } from 'framer-motion';
 import { ArrowDown, FileText, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Particles } from '@/components/ui/particles';
+import { useState, useEffect } from 'react';
 
 export function Hero() {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const roles = ['Full-Stack Engineer', 'Java Developer', 'Cloud Architect', 'Problem Solver'];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToProjects = () => {
     document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -38,7 +49,7 @@ export function Hero() {
               </div>
             </motion.div>
 
-            {/* Name */}
+            {/* Name with typing animation */}
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -48,37 +59,54 @@ export function Hero() {
               Shikhar Pathak
             </motion.h1>
 
-            {/* Title */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              className="text-lg md:text-xl text-muted-foreground mb-6 font-mono"
-            >
-              Full-Stack Engineer · Java · Spring Boot · AWS · React
-            </motion.p>
+            {/* Title with typing effect */}
+            <div className="h-8 md:h-10 mb-6">
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-lg md:text-xl text-primary font-mono font-medium flex items-center"
+              >
+                <span className="text-muted-foreground mr-2">&gt;</span>
+                <span className="relative">
+                  {roles[roleIndex]}
+                  <motion.span
+                    key={roleIndex}
+                    initial={{ width: "100%" }}
+                    animate={{ width: "0%" }}
+                    transition={{ duration: 1, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-background z-10"
+                  />
+                </span>
+                <motion.span
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.8 }}
+                  className="inline-block w-2 h-5 bg-primary ml-1"
+                />
+              </motion.p>
+            </div>
 
             {/* Tagline */}
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
               className="text-base md:text-lg text-muted-foreground mb-10 max-w-xl leading-relaxed"
             >
               I build scalable, high-performance systems that handle real traffic.
-              Currently engineering solutions at Google via Hyspring.
+              Currently engineering solutions at <span className="text-foreground font-medium underline decoration-primary/30">Google</span> via Hyspring.
             </motion.p>
 
             {/* CTAs with hover effects */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.25 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
               className="flex flex-wrap items-center gap-3 mb-12"
             >
               <Button
                 size="lg"
-                className="bg-foreground text-background hover:bg-foreground/90 hover-glow-primary transition-all duration-300 hover:scale-105"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 hover-glow-primary transition-all duration-300 hover:scale-105"
                 onClick={scrollToProjects}
               >
                 View Projects
@@ -86,7 +114,7 @@ export function Hero() {
               <Button
                 size="lg"
                 variant="outline"
-                className="hover:border-primary/50 transition-all duration-300 hover:scale-105"
+                className="hover:border-primary/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
                 onClick={() => window.open('/resume.pdf', '_blank')}
               >
                 <FileText className="mr-2 h-4 w-4" />
@@ -98,7 +126,7 @@ export function Hero() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
               className="flex items-center gap-4"
             >
               {[
@@ -111,7 +139,7 @@ export function Hero() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-300 hover:scale-110"
+                  className="p-2.5 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all duration-300 hover:scale-110"
                   aria-label={label}
                 >
                   <Icon size={20} />
@@ -120,31 +148,56 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right column - Code snippet decoration */}
+          {/* Right column - Code snippet decoration with 3D effect */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="hidden lg:flex justify-end"
+            initial={{ opacity: 0, x: 20, rotateY: 10 }}
+            animate={{ opacity: 1, x: 0, rotateY: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="hidden lg:flex justify-end perspective-1000"
           >
-            <div className="w-full max-w-md glass-strong rounded-lg overflow-hidden shadow-lg hover-glow-primary transition-all duration-300 hover:scale-105">
-              <div className="flex items-center gap-1.5 px-3 py-2 bg-secondary/50 border-b border-border backdrop-blur-sm">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
-                <span className="ml-2 text-xs text-muted-foreground font-mono">developer.java</span>
+            <motion.div
+              whileHover={{ rotateY: -10, rotateX: 5, scale: 1.02 }}
+              className="w-full max-w-md glass-strong rounded-xl overflow-hidden shadow-2xl border-primary/20 transition-all duration-500 ease-out"
+            >
+              <div className="flex items-center justify-between px-4 py-3 bg-secondary/80 border-b border-border/50 backdrop-blur-md">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-400/80 shadow-sm shadow-red-400/20" />
+                  <span className="w-3 h-3 rounded-full bg-yellow-400/80 shadow-sm shadow-yellow-400/20" />
+                  <span className="w-3 h-3 rounded-full bg-green-400/80 shadow-sm shadow-green-400/20" />
+                </div>
+                <span className="text-xs text-muted-foreground font-mono opacity-60">Developer.java</span>
               </div>
-              <div className="p-4 font-mono text-xs text-muted-foreground leading-relaxed">
-                <div><span className="text-primary font-semibold">public class</span> Developer {'{'}</div>
-                <div className="pl-4"><span className="text-primary">private</span> String name = <span className="text-accent">"Shikhar"</span>;</div>
-                <div className="pl-4"><span className="text-primary">private</span> int yearsExp = <span className="text-accent">3</span>;</div>
-                <div className="pl-4"><span className="text-primary">private</span> String[] skills = {'{'}</div>
-                <div className="pl-8"><span className="text-accent">"Java", "Spring Boot",</span></div>
-                <div className="pl-8"><span className="text-accent">"AWS", "React"</span></div>
-                <div className="pl-4">{'}'};</div>
-                <div>{'}'}</div>
+              <div className="p-6 font-mono text-sm leading-relaxed bg-[#0d1117]/90">
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">1</span>
+                  <span><span className="text-[#ff7b72]">public class</span> <span className="text-[#d2a8ff]">Shikhar</span> {'{'}</span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">2</span>
+                  <span className="pl-4"><span className="text-[#ff7b72]">private</span> String role = <span className="text-[#a5d6ff]">"FullStack"</span>;</span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">3</span>
+                  <span className="pl-4"><span className="text-[#ff7b72]">private</span> String[] tech = {'{'}</span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">4</span>
+                  <span className="pl-12"><span className="text-[#a5d6ff]">"Spring"</span>, <span className="text-[#a5d6ff]">"AWS"</span>,</span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">5</span>
+                  <span className="pl-12"><span className="text-[#a5d6ff]">"React"</span>, <span className="text-[#a5d6ff]">"K8s"</span></span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">6</span>
+                  <span className="pl-4">{'}'};</span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-muted-foreground/30 select-none">7</span>
+                  <span>{'}'}</span>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
