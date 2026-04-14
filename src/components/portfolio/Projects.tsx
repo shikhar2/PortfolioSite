@@ -2,6 +2,154 @@ import { motion, useInView, useMotionValue, useSpring, useTransform } from 'fram
 import { useRef, useState } from 'react';
 import { ExternalLink, Github, ArrowRight, Cpu } from 'lucide-react';
 
+// Professional projects at Google via Hyspring — no GitHub links, shown in compact grid
+const professionalProjects = [
+  {
+    title: 'Sales UI',
+    tag: 'Backend',
+    emoji: '📊',
+    accentColor: 'hsl(220, 65%, 55%)',
+    accentColorDim: 'hsl(220, 65%, 55%, 0.12)',
+    backend: 'Designed and developed backend APIs to support data tracking and reporting features. Managed database interactions and optimized queries for performance. Ensured seamless communication between frontend and backend systems.',
+    impact: 'Improved internal workflow efficiency and reduced manual data handling efforts.',
+  },
+  {
+    title: 'Kaveri 2.0',
+    tag: 'Real-time',
+    emoji: '📡',
+    accentColor: 'hsl(160, 50%, 50%)',
+    accentColorDim: 'hsl(160, 50%, 50%, 0.12)',
+    backend: 'Built backend systems to ingest, process, and manage agent-generated market data. Implemented tracking mechanisms and ensured real-time data availability.',
+    impact: 'Enabled better monitoring of agent activities and improved decision-making using real-time insights.',
+  },
+  {
+    title: 'Image Visualization',
+    tag: 'Media',
+    emoji: '🖼️',
+    accentColor: 'hsl(280, 60%, 60%)',
+    accentColorDim: 'hsl(280, 60%, 60%, 0.12)',
+    backend: 'Developed backend services to handle large image datasets, including processing, storage, and retrieval. Optimized performance for faster rendering.',
+    impact: 'Enhanced user experience by enabling quick and clear visualization of complex image data.',
+  },
+  {
+    title: 'Walmart CQE',
+    tag: 'Audit',
+    emoji: '✅',
+    accentColor: 'hsl(35, 80%, 55%)',
+    accentColorDim: 'hsl(35, 80%, 55%, 0.12)',
+    backend: 'Created backend pipelines for search quality audits, including validation logic and error tracking systems. Automated workflows for audit completion.',
+    impact: 'Ensured zero pending errors and maintained high-quality standards for data evaluation.',
+  },
+  {
+    title: 'MEC GMB Funnel',
+    tag: 'Data Pipeline',
+    emoji: '🔄',
+    accentColor: 'hsl(190, 60%, 50%)',
+    accentColorDim: 'hsl(190, 60%, 50%, 0.12)',
+    backend: 'Designed robust data ingestion pipelines for merchant data. Implemented validation checks and error handling to prevent data loss.',
+    impact: 'Achieved seamless data flow with zero data loss and improved system reliability.',
+  },
+  {
+    title: 'Product Lens',
+    tag: 'Platform',
+    emoji: '🔍',
+    accentColor: 'hsl(340, 60%, 55%)',
+    accentColorDim: 'hsl(340, 60%, 55%, 0.12)',
+    backend: 'Maintained and enhanced backend services, fixed bugs, and optimized system performance. Ensured compatibility with new features.',
+    impact: 'Provided a stable and reliable system with high availability.',
+  },
+  {
+    title: 'Walmart Intelligence',
+    tag: 'AI / NLP',
+    emoji: '🧠',
+    accentColor: 'hsl(260, 60%, 60%)',
+    accentColorDim: 'hsl(260, 60%, 60%, 0.12)',
+    backend: 'Developed algorithms to extract structured data from unstructured menu text. Built parsing logic and transformation pipelines.',
+    impact: 'Improved data usability and enabled automation for downstream systems.',
+  },
+  {
+    title: 'Menu Parser',
+    tag: 'Parsing',
+    emoji: '📋',
+    accentColor: 'hsl(50, 80%, 50%)',
+    accentColorDim: 'hsl(50, 80%, 50%, 0.12)',
+    backend: 'Built backend logic for parsing, cleaning, and validating menu data. Ensured data consistency and accuracy.',
+    impact: 'Reduced errors in data processing and improved structured data quality.',
+  },
+  {
+    title: 'HiGrid Document Verification',
+    tag: 'Verification',
+    emoji: '📄',
+    accentColor: 'hsl(200, 65%, 55%)',
+    accentColorDim: 'hsl(200, 65%, 55%, 0.12)',
+    backend: 'Developed backend workflows for document verification processes, including validation, status tracking, and error handling.',
+    impact: 'Maintained high data integrity and ensured all deadlines and SLAs were met.',
+  },
+  {
+    title: 'Search Quality Evaluation',
+    tag: 'Search',
+    emoji: '🔎',
+    accentColor: 'hsl(160, 55%, 48%)',
+    accentColorDim: 'hsl(160, 55%, 48%, 0.12)',
+    backend: 'Implemented backend logic to analyze search results, identify irrelevant matches, and filter low-quality data.',
+    impact: 'Improved overall search accuracy and enhanced end-user experience.',
+  },
+  {
+    title: 'PDF Generation System',
+    tag: 'GCP / CRM',
+    emoji: '📑',
+    accentColor: 'hsl(15, 75%, 55%)',
+    accentColorDim: 'hsl(15, 75%, 55%, 0.12)',
+    backend: 'Developed backend service to dynamically generate PDFs for businesses. Integrated with GCP for storage and HubSpot for CRM data management.',
+    impact: 'Automated document generation and centralized data storage.',
+  },
+  {
+    title: 'CartCrawler',
+    tag: 'Scraping',
+    emoji: '🕷️',
+    accentColor: 'hsl(280, 55%, 58%)',
+    accentColorDim: 'hsl(280, 55%, 58%, 0.12)',
+    backend: 'Built a backend utility to process bulk URLs from Excel files. Integrated Crawlbase API to fetch raw HTML and enabled data download functionality.',
+    impact: 'Enabled efficient and scalable data extraction for e-commerce platforms.',
+  },
+  {
+    title: 'Ontology Project',
+    tag: 'Classification',
+    emoji: '🗂️',
+    accentColor: 'hsl(240, 55%, 60%)',
+    accentColorDim: 'hsl(240, 55%, 60%, 0.12)',
+    backend: 'Designed backend systems for category mapping and classification. Created structured pipelines for data standardization.',
+    impact: 'Improved consistency and enabled automation across datasets.',
+  },
+  {
+    title: 'Amazon SP Reports',
+    tag: 'Reporting',
+    emoji: '📈',
+    accentColor: 'hsl(30, 85%, 52%)',
+    accentColorDim: 'hsl(30, 85%, 52%, 0.12)',
+    backend: 'Developed backend jobs for automated report generation and scheduling. Ensured timely delivery to stakeholders.',
+    impact: 'Reduced manual workload and improved reporting efficiency.',
+  },
+  {
+    title: 'HubSpot Integration',
+    tag: 'CRM',
+    emoji: '🔗',
+    accentColor: 'hsl(10, 70%, 55%)',
+    accentColorDim: 'hsl(10, 70%, 55%, 0.12)',
+    backend: 'Built backend APIs for CRM integration, enabling seamless data synchronization between systems.',
+    impact: 'Improved business workflows and data accessibility.',
+  },
+  {
+    title: 'Meta Integration',
+    tag: 'Auth / Onboarding',
+    emoji: '🌐',
+    accentColor: 'hsl(215, 70%, 58%)',
+    accentColorDim: 'hsl(215, 70%, 58%, 0.12)',
+    backend: 'Developed authentication and onboarding backend systems for Meta sellers. Enabled integration with platform services.',
+    impact: 'Simplified onboarding process and increased platform adoption.',
+  },
+];
+
 const projects = [
   {
     title: 'TeamSphere',
@@ -334,8 +482,175 @@ export function Projects() {
               <ProjectCard key={project.title} project={project} index={index} />
             ))}
           </div>
+
+          {/* ── Professional Work @ Google via Hyspring ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6 }}
+            className="mt-24"
+          >
+            {/* Sub-header */}
+            <div className="flex items-center gap-4 mb-2">
+              <p className="text-sm font-mono text-primary">Professional Work</p>
+              <span className="text-xs font-mono text-muted-foreground px-2.5 py-1 bg-secondary/50 rounded-full border border-border/50">
+                @ Google via Hyspring
+              </span>
+            </div>
+            <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2">
+              Enterprise projects at scale
+            </h3>
+            <p className="text-sm text-muted-foreground mb-10 max-w-xl">
+              Backend systems built for Walmart, Amazon, Meta, and internal platforms.
+              Click any card to see details.
+            </p>
+
+            {/* Compact professional project cards — 3 columns */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-6xl">
+              {professionalProjects.map((proj, index) => (
+                <ProfessionalCard key={proj.title} proj={proj} index={index} />
+              ))}
+            </div>
+
+            {/* Ownership & Responsibilities */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-12 max-w-4xl"
+            >
+              <div
+                className="rounded-2xl border border-primary/20 p-6 md:p-8 relative overflow-hidden"
+                style={{
+                  background: 'hsl(var(--background) / 0.7)',
+                  backdropFilter: 'blur(16px)',
+                  boxShadow: '0 0 40px hsl(var(--primary) / 0.06)',
+                }}
+              >
+                {/* Top accent */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+                <p className="text-xs font-mono text-primary uppercase tracking-widest mb-4">
+                  Ownership &amp; Responsibilities
+                </p>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {[
+                    'Took complete ownership of backend modules from development to deployment',
+                    'Proactively identified and resolved production issues and bottlenecks',
+                    'Supported releases and handled critical production incidents',
+                    'Ensured high data quality, system reliability, and performance',
+                    'Collaborated with cross-functional teams to deliver business requirements',
+                  ].map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
+                      className="flex items-start gap-3 text-sm text-muted-foreground"
+                    >
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/60 shrink-0" />
+                      {item}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
         </motion.div>
       </div>
     </section>
+  );
+}
+
+// Compact flip card for professional projects
+function ProfessionalCard({ proj, index }: { proj: typeof professionalProjects[0]; index: number }) {
+  const [flipped, setFlipped] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay: (index % 4) * 0.08, type: 'spring', stiffness: 90 }}
+      style={{ perspective: '900px' }}
+      className="h-[200px]"
+    >
+      <motion.div
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+        onClick={() => setFlipped(f => !f)}
+        className="relative w-full h-full cursor-pointer"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* Front */}
+        <div
+          className="absolute inset-0 rounded-xl p-4 flex flex-col justify-between border border-white/10"
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            background: 'hsl(var(--background) / 0.75)',
+            backdropFilter: 'blur(14px)',
+            boxShadow: `0 0 20px ${proj.accentColorDim}`,
+          }}
+        >
+          {/* Top accent line */}
+          <div
+            className="absolute top-0 left-0 right-0 h-px rounded-t-xl"
+            style={{ background: `linear-gradient(90deg, transparent, ${proj.accentColor}70, transparent)` }}
+          />
+
+          <div className="flex items-start justify-between">
+            <span className="text-xl">{proj.emoji}</span>
+            <span
+              className="text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border"
+              style={{ color: proj.accentColor, borderColor: `${proj.accentColor}40`, background: proj.accentColorDim }}
+            >
+              {proj.tag}
+            </span>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-foreground mb-1 leading-tight">{proj.title}</h4>
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground/50 font-mono">
+              <motion.span animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>›</motion.span>
+              click for details
+            </div>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div
+          className="absolute inset-0 rounded-xl p-4 flex flex-col justify-between border border-white/10 overflow-hidden"
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+            background: 'hsl(var(--background) / 0.92)',
+            backdropFilter: 'blur(20px)',
+            boxShadow: `0 0 30px ${proj.accentColorDim}`,
+          }}
+        >
+          <div
+            className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl"
+            style={{ background: `linear-gradient(90deg, transparent, ${proj.accentColor}, transparent)` }}
+          />
+
+          <div className="space-y-2 flex-1 overflow-hidden">
+            <p className="text-[9px] font-mono uppercase tracking-widest mb-2" style={{ color: proj.accentColor }}>
+              Impact
+            </p>
+            <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-4">
+              {proj.impact}
+            </p>
+          </div>
+
+          <p className="text-[9px] font-mono text-muted-foreground/30 mt-2">click to flip back</p>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
