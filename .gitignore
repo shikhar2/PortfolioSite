@@ -24,3 +24,5 @@ dist-ssr
 *.sln
 *.sw?
 
+# Codex CLI artifact
+.codex
