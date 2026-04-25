@@ -148,6 +148,15 @@ const professionalProjects = [
     backend: 'Developed authentication and onboarding backend systems for Meta sellers. Enabled integration with platform services.',
     impact: 'Simplified onboarding process and increased platform adoption.',
   },
+  {
+    title: 'Team Sphere 2.0',
+    tag: 'HR Platform',
+    emoji: '🌐',
+    accentColor: 'hsl(220, 65%, 55%)',
+    accentColorDim: 'hsl(220, 65%, 55%, 0.12)',
+    backend: 'Contributed to enhancing the Team Sphere platform with improved existing UI backed by robust backend APIs. Added new functionalities including resignation workflows, chart-based analytics, and multiple feature additions.',
+    impact: 'Improved team management experience, enabled data-driven decision-making through analytics, and streamlined HR processes such as resignation tracking.',
+  },
 ];
 
 const projects = [
@@ -501,13 +510,48 @@ export function Projects() {
             <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-2">
               Enterprise projects at scale
             </h3>
-            <p className="text-sm text-muted-foreground mb-10 max-w-xl">
+            <p className="text-sm text-muted-foreground mb-8 max-w-xl">
               Backend systems built for Walmart, Amazon, Meta, and internal platforms.
-              Click any card to see details.
+              Hover any card to reveal the business impact.
             </p>
 
-            {/* Compact professional project cards — 3 columns */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-6xl">
+            {/* Stats banner */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10 max-w-3xl">
+              {[
+                { value: professionalProjects.length, label: 'Projects Shipped', color: 'hsl(220, 65%, 55%)' },
+                { value: '6+', label: 'Enterprise Clients', color: 'hsl(160, 50%, 50%)' },
+                { value: '0', label: 'Data Loss Incidents', color: 'hsl(280, 60%, 60%)' },
+                { value: '100%', label: 'SLA Compliance', color: 'hsl(35, 80%, 55%)' },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.4 }}
+                  className="relative rounded-xl border border-white/10 p-3 overflow-hidden"
+                  style={{
+                    background: 'hsl(var(--background) / 0.6)',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: `0 0 20px ${stat.color}15`,
+                  }}
+                >
+                  <div
+                    className="absolute top-0 left-0 right-0 h-px"
+                    style={{ background: `linear-gradient(90deg, transparent, ${stat.color}80, transparent)` }}
+                  />
+                  <div className="text-xl md:text-2xl font-bold font-mono mb-0.5" style={{ color: stat.color }}>
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Rich professional project cards — responsive grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
               {professionalProjects.map((proj, index) => (
                 <ProfessionalCard key={proj.title} proj={proj} index={index} />
               ))}
@@ -566,89 +610,159 @@ export function Projects() {
   );
 }
 
-// Compact flip card for professional projects
+// Rich hover-expand card — shows backend work + business impact
 function ProfessionalCard({ proj, index }: { proj: typeof professionalProjects[0]; index: number }) {
-  const [flipped, setFlipped] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), { damping: 25, stiffness: 250 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { damping: 25, stiffness: 250 });
+  const glowX = useTransform(mouseX, [-0.5, 0.5], [0, 100]);
+  const glowY = useTransform(mouseY, [-0.5, 0.5], [0, 100]);
+  const glowBg = useTransform(
+    [glowX, glowY],
+    ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, ${proj.accentColor}25 0%, transparent 60%)`
+  );
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 30, rotateX: -10 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: (index % 4) * 0.08, type: 'spring', stiffness: 90 }}
-      style={{ perspective: '900px' }}
-      className="h-[200px]"
+      transition={{ duration: 0.5, delay: (index % 4) * 0.06, type: 'spring', stiffness: 90 }}
+      style={{ perspective: '1000px' }}
     >
       <motion.div
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        onClick={() => setFlipped(f => !f)}
-        className="relative w-full h-full cursor-pointer"
-        style={{ transformStyle: 'preserve-3d' }}
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => {
+          setExpanded(false);
+          mouseX.set(0);
+          mouseY.set(0);
+        }}
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+        className="relative rounded-2xl border border-white/10 overflow-hidden cursor-default group"
+        animate={{
+          boxShadow: expanded
+            ? `0 12px 40px ${proj.accentColorDim}, 0 0 30px ${proj.accentColor}20`
+            : `0 4px 20px ${proj.accentColorDim}`,
+        }}
+        transition={{ duration: 0.3 }}
       >
-        {/* Front */}
+        {/* Layered backgrounds */}
         <div
-          className="absolute inset-0 rounded-xl p-4 flex flex-col justify-between border border-white/10"
-          style={{
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-            background: 'hsl(var(--background) / 0.75)',
-            backdropFilter: 'blur(14px)',
-            boxShadow: `0 0 20px ${proj.accentColorDim}`,
-          }}
-        >
-          {/* Top accent line */}
-          <div
-            className="absolute top-0 left-0 right-0 h-px rounded-t-xl"
-            style={{ background: `linear-gradient(90deg, transparent, ${proj.accentColor}70, transparent)` }}
-          />
+          className="absolute inset-0"
+          style={{ background: 'hsl(var(--background) / 0.75)', backdropFilter: 'blur(16px)' }}
+        />
+        {/* Cursor-following spotlight */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: glowBg, opacity: expanded ? 1 : 0, transition: 'opacity 0.3s' }}
+        />
+        {/* Top accent bar */}
+        <div
+          className="absolute top-0 left-0 right-0 h-0.5"
+          style={{ background: `linear-gradient(90deg, transparent, ${proj.accentColor}, transparent)` }}
+        />
+        {/* Corner glow */}
+        <div
+          className="absolute -top-12 -right-12 w-32 h-32 rounded-full blur-3xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"
+          style={{ background: proj.accentColor }}
+        />
 
-          <div className="flex items-start justify-between">
-            <span className="text-xl">{proj.emoji}</span>
+        {/* Content */}
+        <div className="relative z-10 p-5" style={{ transformStyle: 'preserve-3d' }}>
+          {/* Header */}
+          <div className="flex items-start justify-between mb-3" style={{ transform: 'translateZ(20px)' }}>
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0"
+              style={{
+                background: proj.accentColorDim,
+                border: `1px solid ${proj.accentColor}30`,
+                boxShadow: `0 4px 12px ${proj.accentColorDim}`,
+              }}
+            >
+              {proj.emoji}
+            </div>
             <span
-              className="text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border"
+              className="text-[9px] font-mono uppercase tracking-widest px-2 py-1 rounded-full border whitespace-nowrap"
               style={{ color: proj.accentColor, borderColor: `${proj.accentColor}40`, background: proj.accentColorDim }}
             >
               {proj.tag}
             </span>
           </div>
 
-          <div>
-            <h4 className="text-sm font-bold text-foreground mb-1 leading-tight">{proj.title}</h4>
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground/50 font-mono">
-              <motion.span animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>›</motion.span>
-              click for details
+          {/* Title */}
+          <h4
+            className="text-base font-bold text-foreground leading-tight mb-3"
+            style={{ transform: 'translateZ(15px)' }}
+          >
+            {proj.title}
+          </h4>
+
+          {/* Backend work — always visible, truncated */}
+          <div className="mb-3">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Cpu size={10} style={{ color: proj.accentColor }} />
+              <p className="text-[9px] font-mono uppercase tracking-widest" style={{ color: proj.accentColor }}>
+                Backend
+              </p>
             </div>
-          </div>
-        </div>
-
-        {/* Back */}
-        <div
-          className="absolute inset-0 rounded-xl p-4 flex flex-col justify-between border border-white/10 overflow-hidden"
-          style={{
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)',
-            background: 'hsl(var(--background) / 0.92)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: `0 0 30px ${proj.accentColorDim}`,
-          }}
-        >
-          <div
-            className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl"
-            style={{ background: `linear-gradient(90deg, transparent, ${proj.accentColor}, transparent)` }}
-          />
-
-          <div className="space-y-2 flex-1 overflow-hidden">
-            <p className="text-[9px] font-mono uppercase tracking-widest mb-2" style={{ color: proj.accentColor }}>
-              Impact
-            </p>
-            <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-4">
-              {proj.impact}
-            </p>
+            <motion.p
+              animate={{ height: expanded ? 'auto' : '2.5rem' }}
+              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+              className={`text-[11px] text-muted-foreground leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}
+            >
+              {proj.backend}
+            </motion.p>
           </div>
 
-          <p className="text-[9px] font-mono text-muted-foreground/30 mt-2">click to flip back</p>
+          {/* Business impact — reveals on hover */}
+          <motion.div
+            initial={false}
+            animate={{
+              height: expanded ? 'auto' : 0,
+              opacity: expanded ? 1 : 0,
+              marginTop: expanded ? 8 : 0,
+            }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div
+              className="rounded-lg p-2.5 border"
+              style={{
+                background: proj.accentColorDim,
+                borderColor: `${proj.accentColor}30`,
+              }}
+            >
+              <div className="flex items-center gap-1.5 mb-1">
+                <span style={{ color: proj.accentColor }}>📈</span>
+                <p className="text-[9px] font-mono uppercase tracking-widest" style={{ color: proj.accentColor }}>
+                  Impact
+                </p>
+              </div>
+              <p className="text-[11px] text-foreground/85 leading-relaxed">
+                {proj.impact}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Hover indicator (only when collapsed) */}
+          {!expanded && (
+            <div className="flex items-center gap-1 text-[9px] text-muted-foreground/40 font-mono mt-2">
+              <motion.span animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>›</motion.span>
+              hover for impact
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.div>
